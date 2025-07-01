@@ -1,3 +1,5 @@
+"use client";
+
 import { ClerkProvider, ClerkLoaded } from "@clerk/nextjs";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
