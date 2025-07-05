@@ -1,57 +1,30 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { useEffect, useRef, useState } from "react";
+
 import {
-  Send,
-  Mic,
-  MicOff,
+  Brain,
   Camera,
   FileText,
-  Target,
-  Brain,
-  Sparkles,
-  CheckCircle,
-  Clock,
-  TrendingUp,
+  Mic,
+  MicOff,
   Plus,
+  Send,
+  Sparkles,
+  Target,
 } from "lucide-react";
 
-interface Message {
-  id: string;
-  content: string;
-  role: "user" | "assistant";
-  timestamp: Date;
-  type: "text" | "goal" | "reflection" | "feedback";
-  metadata?: {
-    goalId?: string;
-    codeSnippet?: string;
-    topic?: string;
-    difficulty?: "easy" | "medium" | "hard";
-  };
-}
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
-interface Goal {
-  id: string;
-  title: string;
-  description: string;
-  category: "coding" | "productivity" | "mindset" | "habits";
-  targetDate: Date;
-  progress: number;
-  status: "active" | "completed" | "paused";
-  dailyCheckins: Array<{
-    date: Date;
-    completed: boolean;
-    notes: string;
-  }>;
-}
+import { AppSidebar } from "@/components/app-sidebar";
+
+import { Goal, Message } from "@/features/chat/types/chat.types";
 
 export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([

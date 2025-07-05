@@ -1,14 +1,27 @@
 "use client";
 
 import { useState } from "react";
-import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  BarChart3,
+  Brain,
+  Calendar as CalendarIcon,
+  CheckCircle,
+  Clock,
+  Edit,
+  Eye,
+  MessageCircle,
+  Plus,
+  Star,
+  Target,
+  Trash2,
+  TrendingUp,
+  Trophy,
+} from "lucide-react";
+
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -16,6 +29,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
 import {
   Select,
   SelectContent,
@@ -23,24 +38,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Target,
-  Plus,
-  Calendar as CalendarIcon,
-  TrendingUp,
-  CheckCircle,
-  Clock,
-  Brain,
-  Star,
-  BarChart3,
-  Trophy,
-  Edit,
-  Trash2,
-  Eye,
-  MessageCircle,
-} from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { AppSidebar } from "@/components/app-sidebar";
 
 interface Goal {
   id: string;

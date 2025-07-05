@@ -1,8 +1,9 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-import { AppSidebar } from "@/components/app-sidebar";
+
 import { SidebarInset } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
 
 export default function DashboardPage() {
   const { user } = useUser();

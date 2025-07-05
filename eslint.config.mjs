@@ -39,6 +39,7 @@ const eslintConfig = [
             "src/hooks/**/*", // Custom React hooks
             "src/lib/**/*", // Utility functions and libraries
             "src/types/**/*", // TypeScript type definitions
+            "src/app-config.ts", // App configuration
           ],
         },
         {
