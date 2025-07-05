@@ -1,7 +1,9 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
+import { useEffect, useState } from "react";
 import {
   IconBrain,
   IconMessageCircle,
@@ -43,45 +45,44 @@ const mentorData = {
       title: "Dashboard",
       url: "/dashboard",
       icon: IconHome,
-      variant: "ghost" as const,
+      variant: "default" as const,
     },
     {
       title: "AI Chat",
       url: "/chat",
       icon: IconMessageCircle,
       variant: "default" as const,
-      isActive: true,
     },
     {
       title: "Goals",
       url: "/goals",
       icon: IconTarget,
-      variant: "ghost" as const,
+      variant: "default" as const,
       badge: "3",
     },
     {
       title: "Learning",
       url: "/learning",
       icon: IconBook,
-      variant: "ghost" as const,
+      variant: "default" as const,
     },
     {
       title: "Progress",
       url: "/progress",
       icon: IconChartBar,
-      variant: "ghost" as const,
+      variant: "default" as const,
     },
     {
       title: "Achievements",
       url: "/achievements",
       icon: IconTrophy,
-      variant: "ghost" as const,
+      variant: "default" as const,
     },
   ],
   recentChats: [
     {
       title: "JavaScript Fundamentals",
-      url: "/chat",
+      url: "/chat?topic=javascript",
       icon: IconMessageCircle,
       date: "2 hours ago",
       mentor: "Code Mentor",
@@ -89,7 +90,7 @@ const mentorData = {
     },
     {
       title: "React Hooks Deep Dive",
-      url: "/chat",
+      url: "/chat?topic=react",
       icon: IconMessageCircle,
       date: "1 day ago",
       mentor: "React Expert",
@@ -97,7 +98,7 @@ const mentorData = {
     },
     {
       title: "System Design Interview",
-      url: "/chat",
+      url: "/chat?topic=system-design",
       icon: IconMessageCircle,
       date: "3 days ago",
       mentor: "Senior Engineer",
@@ -105,7 +106,7 @@ const mentorData = {
     },
     {
       title: "Data Structures & Algorithms",
-      url: "/chat",
+      url: "/chat?topic=algorithms",
       icon: IconMessageCircle,
       date: "1 week ago",
       mentor: "Algo Master",
@@ -146,16 +147,32 @@ const mentorData = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user, isLoaded } = useUser();
-
-  // Default user data if Clerk is not loaded or user is not available
-  const userData = {
+  const [userData, setUserData] = useState({
     name: user?.firstName || user?.fullName || "User",
     email: user?.primaryEmailAddress?.emailAddress || "user@example.com",
     avatar: user?.imageUrl || "",
     role: "Student",
     level: "Intermediate",
     credits: 150,
-  };
+  });
+
+  // Fetch user data with private metadata from server
+  useEffect(() => {
+    if (isLoaded && user) {
+      fetch("/api/user")
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.error) {
+            console.error("Error fetching user data:", data.error);
+            return;
+          }
+          setUserData(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
+    }
+  }, [isLoaded, user]);
 
   if (!isLoaded) {
     return (
@@ -167,7 +184,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 asChild
                 className="data-[slot=sidebar-menu-button]:!p-1.5 h-fit"
               >
-                <a href="/dashboard">
+                <Link href="/dashboard">
                   <div className="flex items-center gap-2">
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-purple-600">
                       <IconBrain className="h-5 w-5 text-white" />
@@ -179,7 +196,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       </span>
                     </div>
                   </div>
-                </a>
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -197,7 +214,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5 h-fit"
             >
-              <a href="/dashboard">
+              <Link href="/dashboard">
                 <div className="flex items-center gap-2">
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-purple-600">
                     <IconBrain className="h-5 w-5 text-white" />
@@ -209,7 +226,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     </span>
                   </div>
                 </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -247,15 +264,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenu className="gap-0.5">
               {mentorData.recentChats.slice(0, 3).map((chat, index) => (
                 <SidebarMenuItem key={index}>
-                  <SidebarMenuButton asChild size="sm">
-                    <a
+                  <SidebarMenuButton asChild size="sm" className="group">
+                    <Link
                       href={chat.url}
                       className="flex items-center justify-between w-full min-w-0"
                     >
                       <div className="flex items-center gap-2 min-w-0 flex-1">
-                        <chat.icon className="h-3.5 w-3.5 flex-shrink-0" />
+                        <div className="relative">
+                          <chat.icon className="h-3.5 w-3.5 flex-shrink-0" />
+                          {chat.status === "active" && (
+                            <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-green-500 border border-white dark:border-gray-900"></div>
+                          )}
+                        </div>
                         <div className="flex flex-col items-start min-w-0 flex-1">
-                          <span className="text-xs font-medium truncate w-full">
+                          <span className="text-xs font-medium truncate w-full group-hover:text-primary">
                             {chat.title}
                           </span>
                           <span className="text-xs text-muted-foreground truncate w-full">
@@ -264,14 +286,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         </div>
                       </div>
                       <div className="flex items-center gap-1 flex-shrink-0 ml-1">
-                        {chat.status === "active" && (
-                          <div className="h-1.5 w-1.5 rounded-full bg-green-500 flex-shrink-0"></div>
-                        )}
                         <span className="text-xs text-muted-foreground flex-shrink-0 hidden sm:block">
                           {chat.date}
                         </span>
+                        {chat.status === "completed" && (
+                          <div className="h-1.5 w-1.5 rounded-full bg-blue-500 flex-shrink-0"></div>
+                        )}
                       </div>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
